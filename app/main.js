@@ -74,7 +74,7 @@ app.get('/', async (req, res) => {
     }
 });
 
-const server = app.listen(3001, () => {
+const server = app.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 const quit = await new Promise((resolve, reject) => {
