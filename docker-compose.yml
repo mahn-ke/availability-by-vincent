@@ -1,6 +1,9 @@
+#http
 version: "3.8"
 
 services:
-  app:
-    image: ghcr.io/mahn-ke/availability-by-vincent:latest
-    restart: unless-stopped
+    app:
+        image: ghcr.io/mahn-ke/availability-by-vincent:latest
+        restart: unless-stopped
+        ports:
+            - "3123:3000"
