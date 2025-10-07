@@ -7,3 +7,5 @@ services:
         restart: unless-stopped
         ports:
             - "3123:3000"
+        environment:
+            - CALENDAR_URLS=${CALENDAR_URLS}
