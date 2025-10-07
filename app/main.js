@@ -1,6 +1,6 @@
-const express = require('express');
-const axios = require('axios');
-const ical = require('node-ical');
+import express from 'express';
+import axios from 'axios';
+import ical from 'node-ical';
 
 const app = express();
 
@@ -74,6 +74,12 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
+const server = app.listen(3001, () => {
     console.log('Server running on port 3000');
 });
+const quit = await new Promise((resolve, reject) => {
+    server.on('close', resolve);
+    server.on('error', reject);
+});
+
+console.log('Server closed', quit);
