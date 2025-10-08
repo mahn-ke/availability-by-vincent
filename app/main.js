@@ -68,14 +68,6 @@ app.get('/', async (req, res) => {
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             response += `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
-            const nextDate = req.query.date
-                ? new Date(
-                    req.query.date.slice(0, 4),
-                    parseInt(req.query.date.slice(4, 6)) - 1,
-                    req.query.date.slice(6, 8)
-                )
-                : new Date();
-            nextDate.setDate(nextDate.getDate() + 1);
             if (req.query.debug !== undefined) {
                 response +=
                     `<hr />Debug Info:<br />\n` +
@@ -99,6 +91,14 @@ app.get('/', async (req, res) => {
             response += ` (...also am ${xStr})`;
         }
 
+        const nextDate = req.query.date
+            ? new Date(
+                req.query.date.slice(0, 4),
+                parseInt(req.query.date.slice(4, 6)) - 1,
+                req.query.date.slice(6, 8)
+            )
+            : new Date();
+        nextDate.setDate(nextDate.getDate() + 1);
         const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
         response += `<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
         res.type('html').send(response);
