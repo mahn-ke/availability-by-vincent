@@ -55,9 +55,28 @@ app.get('/', async (req, res) => {
             (ev.transparency !== 'TRANSPARENT' && ev.status !== 'FREE')
             );
 
-        let response = '';
+        let response = `
+            <style>
+              body {
+                background: #170c03;
+                color: #fff;
+                font-family: sans-serif;
+                text-align: center;
+                font-size: 2vw;
+                font-weight: bolder;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            a {
+                color: #e27a2d;
+                text-decoration: none;
+                font-weight: normal;
+            }
+            </style><div>
+        `;
         if (ev.length === 0) {
-            response = "Nix los; zumindest geplantes!";
+            response = "Nix los; zumindest nix geplantes!";
         } else {
             const earliest = ev[0];
             const latest = ev[ev.length - 1];
@@ -67,7 +86,7 @@ app.get('/', async (req, res) => {
             endWithBuffer.setMinutes(0);
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
-            response += `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
+            response += `Zwischen ${startStr} Uhr und ${endStr} Uhr vermutlich Zeugs am machen.`;
             if (req.query.debug !== undefined) {
                 response +=
                     `<hr />Debug Info:<br />\n` +
@@ -100,7 +119,7 @@ app.get('/', async (req, res) => {
             : new Date();
         nextDate.setDate(nextDate.getDate() + 1);
         const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
-        response += `<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
+        response += `<br />\n<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a></div>`;
         res.type('html').send(response);
 
     } catch (err) {
