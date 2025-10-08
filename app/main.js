@@ -64,13 +64,14 @@ app.get('/', async (req, res) => {
             const endWithBuffer = new Date(latest.end.getTime() + 45 * 60 * 1000);
             startWithBuffer.setMinutes(0);
             endWithBuffer.setMinutes(0);
-            const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-            const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
+            const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             let response = `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
             if (req.query.debug !== undefined) {
                 response +=
                     `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.\n\n` +
                     `Debug Info:\n` +
+                    `Timezone: Europe/Berlin\n` +
                     `Start with buffer: ${startWithBuffer.toISOString()}\n` +
                     `End with buffer: ${endWithBuffer.toISOString()}\n` +
                     `Earliest event name: ${earliest.summary}\n` +
