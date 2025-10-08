@@ -76,7 +76,7 @@ app.get('/', async (req, res) => {
             </style><div>
         `;
         if (ev.length === 0) {
-            response = "Nix los; zumindest nix geplantes!";
+            response += "Nix los; zumindest nix geplantes!";
         } else {
             const earliest = ev[0];
             const latest = ev[ev.length - 1];
