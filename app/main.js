@@ -66,21 +66,30 @@ app.get('/', async (req, res) => {
             endWithBuffer.setMinutes(0);
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
-            let response = `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
+            let response = `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.<br />\n`;
+            const nextDate = req.query.date
+                ? new Date(
+                    req.query.date.slice(0, 4),
+                    parseInt(req.query.date.slice(4, 6)) - 1,
+                    req.query.date.slice(6, 8)
+                )
+                : new Date();
+            nextDate.setDate(nextDate.getDate() + 1);
+            const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
+            response += `<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
             if (req.query.debug !== undefined) {
                 response +=
-                    `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.\n\n` +
-                    `Debug Info:\n` +
-                    `Timezone: Europe/Berlin\n` +
-                    `Start with buffer: ${startWithBuffer.toISOString()}\n` +
-                    `End with buffer: ${endWithBuffer.toISOString()}\n` +
-                    `Earliest event name: ${earliest.summary}\n` +
-                    `Earliest event start: ${earliest.start.toISOString()}\n` +
-                    `Latest event name: ${latest.summary}\n` +
-                    `Latest event end: ${latest.end.toISOString()}\n` +
+                    `<hr />Debug Info:<br />\n` +
+                    `Timezone: Europe/Berlin<br />\n` +
+                    `Start with buffer: ${startWithBuffer.toISOString()}<br />\n` +
+                    `End with buffer: ${endWithBuffer.toISOString()}<br />\n` +
+                    `Earliest event name: ${earliest.summary}<br />\n` +
+                    `Earliest event start: ${earliest.start.toISOString()}<br />\n` +
+                    `Latest event name: ${latest.summary}<br />\n` +
+                    `Latest event end: ${latest.end.toISOString()}<br />\n` +
                     `Total events considered: ${ev.length}`;
             }
-            res.type('text').send(response);
+            res.type('html').send(response);
         }
     } catch (err) {
         console.error(err);
