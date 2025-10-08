@@ -82,7 +82,7 @@ app.get('/', async (req, res) => {
             }
         }
         if (dateStr !== new Date().toISOString().slice(0, 10).replace(/-/g, '')) {
-            const dayFormatter = new Intl.DateTimeFormat('de-DE', { weekday: 'short', day: '2-digit', month: 'short', year: '2-digit' });
+            const dayFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' });
             const xDate = start;
             const yDate = new Date(start);
             yDate.setDate(xDate.getDate() + 1);
