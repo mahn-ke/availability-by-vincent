@@ -76,7 +76,6 @@ app.get('/', async (req, res) => {
                 )
                 : new Date();
             nextDate.setDate(nextDate.getDate() + 1);
-            const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
             if (req.query.debug !== undefined) {
                 response +=
                     `<hr />Debug Info:<br />\n` +
@@ -100,6 +99,7 @@ app.get('/', async (req, res) => {
             response += ` (...also am ${xStr})`;
         }
 
+        const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
         response += `<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
         res.type('html').send(response);
 
