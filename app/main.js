@@ -56,6 +56,11 @@ app.get('/', async (req, res) => {
             );
 
         let response = `
+            <meta property="og:title" content="A-vivi-bility" />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://availability.by.vincent.mahn.ke" />
+            <meta property="og:description" content="Was macht Vincent heute eigentlich?" />
+            <meta name="theme-color" content="#e27a2d">
             <style>
               body {
                 background: #170c03;
@@ -67,12 +72,12 @@ app.get('/', async (req, res) => {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-            a {
+              }
+              a {
                 color: #e27a2d;
                 text-decoration: none;
                 font-weight: normal;
-            }
+              }
             </style><div>
         `;
         if (ev.length === 0) {
