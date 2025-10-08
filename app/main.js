@@ -55,8 +55,9 @@ app.get('/', async (req, res) => {
             (ev.transparency !== 'TRANSPARENT' && ev.status !== 'FREE')
             );
 
+        let response = '';
         if (ev.length === 0) {
-            res.type('text').send("Nix los; zumindest geplantes!");
+            response = "Nix los; zumindest geplantes!";
         } else {
             const earliest = ev[0];
             const latest = ev[ev.length - 1];
@@ -66,7 +67,7 @@ app.get('/', async (req, res) => {
             endWithBuffer.setMinutes(0);
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
-            let response = `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.<br />\n`;
+            response += `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
             const nextDate = req.query.date
                 ? new Date(
                     req.query.date.slice(0, 4),
@@ -76,7 +77,6 @@ app.get('/', async (req, res) => {
                 : new Date();
             nextDate.setDate(nextDate.getDate() + 1);
             const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
-            response += `<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
             if (req.query.debug !== undefined) {
                 response +=
                     `<hr />Debug Info:<br />\n` +
@@ -89,8 +89,20 @@ app.get('/', async (req, res) => {
                     `Latest event end: ${latest.end.toISOString()}<br />\n` +
                     `Total events considered: ${ev.length}`;
             }
-            res.type('html').send(response);
         }
+        if (dateStr !== new Date().toISOString().slice(0, 10).replace(/-/g, '')) {
+            const dayFormatter = new Intl.DateTimeFormat('de-DE', { weekday: 'short', day: '2-digit', month: 'short', year: '2-digit' });
+            const xDate = start;
+            const yDate = new Date(start);
+            yDate.setDate(xDate.getDate() + 1);
+            const xStr = dayFormatter.format(xDate);
+            const yStr = dayFormatter.format(yDate);
+            response += ` (...also am ${xStr})`;
+        }
+
+        response += `<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a>`;
+        res.type('html').send(response);
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to fetch calendar.' });
