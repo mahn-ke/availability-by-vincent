@@ -59,14 +59,28 @@ app.get('/', async (req, res) => {
             res.type('text').send("Nix los; zumindest geplantes!");
         } else {
             const earliest = ev[0];
+            const latest = ev[ev.length - 1];
             const startWithBuffer = new Date(earliest.start.getTime() - 45 * 60 * 1000);
-            const endWithBuffer = new Date(earliest.end.getTime() + 45 * 60 * 1000);
+            const endWithBuffer = new Date(latest.end.getTime() + 45 * 60 * 1000);
             startWithBuffer.setMinutes(0);
-            endWithBuffer.setMinutes(endWithBuffer.getMinutes() + 60);
             endWithBuffer.setMinutes(0);
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             res.type('text').send(`Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`);
+            // if ?debug is set, print startWithBuffer, endWithBuffer, earliest.start, latest.end
+            if (req.query.debug !== undefined) {
+                res.type('text').send(
+                    `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.\n\n` +
+                    `Debug Info:\n` +
+                    `Start with buffer: ${startWithBuffer.toISOString()}\n` +
+                    `End with buffer: ${endWithBuffer.toISOString()}\n` +
+                    `Earliest event name: ${earliest.summary}\n` +
+                    `Earliest event start: ${earliest.start.toISOString()}\n` +
+                    `Latest event name: ${latest.summary}\n` +
+                    `Latest event end: ${latest.end.toISOString()}\n` +
+                    `Total events considered: ${ev.length}`
+                );
+            }
         }
     } catch (err) {
         console.error(err);
