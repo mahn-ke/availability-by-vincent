@@ -66,10 +66,9 @@ app.get('/', async (req, res) => {
             endWithBuffer.setMinutes(0);
             const startStr = startWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             const endStr = endWithBuffer.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-            res.type('text').send(`Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`);
-            // if ?debug is set, print startWithBuffer, endWithBuffer, earliest.start, latest.end
+            let response = `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.`;
             if (req.query.debug !== undefined) {
-                res.type('text').send(
+                response +=
                     `Zwischen ${startStr} und ${endStr} vermutlich Zeugs am machen.\n\n` +
                     `Debug Info:\n` +
                     `Start with buffer: ${startWithBuffer.toISOString()}\n` +
@@ -78,9 +77,9 @@ app.get('/', async (req, res) => {
                     `Earliest event start: ${earliest.start.toISOString()}\n` +
                     `Latest event name: ${latest.summary}\n` +
                     `Latest event end: ${latest.end.toISOString()}\n` +
-                    `Total events considered: ${ev.length}`
-                );
+                    `Total events considered: ${ev.length}`;
             }
+            res.type('text').send(response);
         }
     } catch (err) {
         console.error(err);
