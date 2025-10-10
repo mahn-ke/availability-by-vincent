@@ -73,6 +73,11 @@ app.get('/', async (req, res) => {
                 align-items: center;
                 justify-content: center;
               }
+              @media (orientation: portrait) {
+                body {
+                  font-size: 4vh;
+                }
+              } 
               a {
                 color: #e27a2d;
                 text-decoration: none;
