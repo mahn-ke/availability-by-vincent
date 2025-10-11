@@ -5,14 +5,16 @@ import ical from 'node-ical';
 const app = express();
 
 app.get('/', async (req, res) => {
+    const today = new Date();
+    const berlinDate = new Date(today.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+    const year = berlinDate.getFullYear();
+    const month = String(berlinDate.getMonth() + 1).padStart(2, '0');
+    const day = String(berlinDate.getDate()).padStart(2, '0');
+    const todayDateStr = `${year}${month}${day}`;
+    
     let dateStr = req.query.date;
     if (!dateStr) {
-        const today = new Date();
-        const berlinDate = new Date(today.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
-        const year = berlinDate.getFullYear();
-        const month = String(berlinDate.getMonth() + 1).padStart(2, '0');
-        const day = String(berlinDate.getDate()).padStart(2, '0');
-        dateStr = `${year}${month}${day}`;
+        dateStr = todayDateStr;
     }
 
     if (!/^\d{8}$/.test(dateStr)) {
@@ -114,7 +116,7 @@ app.get('/', async (req, res) => {
                     `Total events considered: ${ev.length}`;
             }
         }
-        if (dateStr !== new Date().toISOString().slice(0, 10).replace(/-/g, '')) {
+        if (dateStr !== todayDateStr) {
             const dayFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' });
             const xDate = start;
             const yDate = new Date(start);
@@ -126,11 +128,15 @@ app.get('/', async (req, res) => {
 
         const nextDate = req.query.date
             ? new Date(
-                req.query.date.slice(0, 4),
-                parseInt(req.query.date.slice(4, 6)) - 1,
-                req.query.date.slice(6, 8)
+                dateStr.slice(0, 4),
+                parseInt(dateStr.slice(4, 6)) - 1,
+                dateStr.slice(6, 8)
             )
-            : new Date();
+            : new Date(
+                todayDateStr.slice(0, 4),
+                parseInt(todayDateStr.slice(4, 6)) - 1,
+                todayDateStr.slice(6, 8)
+            )
         nextDate.setDate(nextDate.getDate() + 1);
         const nextDateStr = nextDate.toISOString().slice(0, 10).replace(/-/g, '');
         response += `<br />\n<br />\n<a href="?date=${nextDateStr}">Und den Tag danach?</a></div>`;
