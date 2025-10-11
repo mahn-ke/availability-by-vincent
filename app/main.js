@@ -8,7 +8,11 @@ app.get('/', async (req, res) => {
     let dateStr = req.query.date;
     if (!dateStr) {
         const today = new Date();
-        dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
+        const berlinDate = new Date(today.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+        const year = berlinDate.getFullYear();
+        const month = String(berlinDate.getMonth() + 1).padStart(2, '0');
+        const day = String(berlinDate.getDate()).padStart(2, '0');
+        dateStr = `${year}${month}${day}`;
     }
 
     if (!/^\d{8}$/.test(dateStr)) {
