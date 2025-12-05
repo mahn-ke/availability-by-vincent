@@ -37,7 +37,7 @@ app.get('/', async (req, res) => {
         }
 
         const icalURLs = process.env.CALENDAR_URLS.split(',').map(base =>
-            base + '?export&expand=1&start=' + Math.floor(start.getTime() / 1000) + '&end=' + Math.floor(end.getTime() / 1000)
+            base.replace('$NEXTCLOUDSUFFIX', '?export&expand=1&start=' + Math.floor(start.getTime() / 1000) + '&end=' + Math.floor(end.getTime() / 1000))
         );
 
         const responses = await Promise.all(icalURLs.map(url =>
